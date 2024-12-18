@@ -6,8 +6,11 @@ pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     const allocator = gpa.allocator();
 
-    var leftList = std.ArrayList(i32).init(allocator);
-    var rightList = std.ArrayList(i32).init(allocator);
+    var leftList = std.ArrayList(i32).initCapacity(allocator, 1024) catch @panic("Cannot allocate");
+    var rightList = std.ArrayList(i32).initCapacity(allocator, 1024) catch @panic("Cannot allocate");
+
+    defer leftList.deinit();
+    defer rightList.deinit();
 
     var it = std.mem.tokenizeScalar(u8, input, '\n');
     while (it.next()) |line| {
